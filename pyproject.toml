@@ -1,6 +1,6 @@
 [project]
 name = "ha-pioneer-infrared"
-version = "0.1.0"
+version = "0.2.0"
 description = "Custom Home Assistant integration for IR-controlled Pioneer devices"
 requires-python = ">=3.13"
 dependencies = [
