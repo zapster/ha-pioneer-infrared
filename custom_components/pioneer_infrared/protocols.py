@@ -1,19 +1,10 @@
-"""IR protocol encoders for local Samsung and Pioneer commands."""
+"""Pioneer IR protocol encoder."""
 
 from __future__ import annotations
 
 from typing import override
 
 from infrared_protocols import Command
-
-SAMSUNG_MODULATION = 38000
-SAMSUNG_HEADER_HIGH_US = 4500
-SAMSUNG_HEADER_LOW_US = 4500
-SAMSUNG_BIT_HIGH_US = 560
-SAMSUNG_BIT_ONE_LOW_US = 1690
-SAMSUNG_BIT_ZERO_LOW_US = 560
-SAMSUNG_FOOTER_HIGH_US = 560
-SAMSUNG_FOOTER_LOW_US = 560
 
 PIONEER_MODULATION = 40000
 PIONEER_HEADER_HIGH_US = 9000
@@ -30,7 +21,6 @@ DEFAULT_REPEAT_WAIT_US = 10000
 def _append_repeats(
     timings: list[int], frame: list[int], repeat_count: int, repeat_wait_us: int,
 ) -> None:
-    """Append frame repeats, adding a low interval between complete frames."""
     for repeat_index in range(repeat_count + 1):
         current_frame = list(frame)
         if repeat_index < repeat_count:
@@ -39,44 +29,6 @@ def _append_repeats(
             else:
                 current_frame.append(-repeat_wait_us)
         timings.extend(current_frame)
-
-
-class SamsungCommand(Command):
-    """Samsung IR command matching ESPHome's transmit_samsung encoder."""
-
-    def __init__(
-        self,
-        *,
-        data: int,
-        nbits: int = 32,
-        modulation: int = SAMSUNG_MODULATION,
-        repeat_count: int = DEFAULT_REPEAT_TIMES - 1,
-        repeat_wait_us: int = DEFAULT_REPEAT_WAIT_US,
-    ) -> None:
-        """Initialize a Samsung IR command."""
-        super().__init__(modulation=modulation, repeat_count=repeat_count)
-        self.data = data
-        self.nbits = nbits
-        self.repeat_wait_us = repeat_wait_us
-
-    @override
-    def get_raw_timings(self) -> list[int]:
-        """Get raw timings for the Samsung command."""
-        frame: list[int] = [SAMSUNG_HEADER_HIGH_US, -SAMSUNG_HEADER_LOW_US]
-
-        for bit in range(self.nbits, 0, -1):
-            low_us = (
-                SAMSUNG_BIT_ONE_LOW_US
-                if (self.data >> (bit - 1)) & 1
-                else SAMSUNG_BIT_ZERO_LOW_US
-            )
-            frame.extend([SAMSUNG_BIT_HIGH_US, -low_us])
-
-        frame.extend([SAMSUNG_FOOTER_HIGH_US, -SAMSUNG_FOOTER_LOW_US])
-
-        timings: list[int] = []
-        _append_repeats(timings, frame, self.repeat_count, self.repeat_wait_us)
-        return timings
 
 
 class PioneerCommand(Command):
@@ -99,7 +51,6 @@ class PioneerCommand(Command):
 
     @override
     def get_raw_timings(self) -> list[int]:
-        """Get raw timings for the Pioneer command."""
         frame = _build_pioneer_frame(self.rc_code_1)
 
         if self.rc_code_2:
@@ -112,7 +63,6 @@ class PioneerCommand(Command):
 
 
 def _build_pioneer_frame(rc_code: int) -> list[int]:
-    """Build a single Pioneer IR frame for an ESPHome rc_code value."""
     address = (rc_code & 0xFF00) | (~(rc_code >> 8) & 0xFF)
     command = _reverse_pioneer_command_byte(rc_code & 0xFF)
     command = (command << 8) | ((~command) & 0xFF)
@@ -125,7 +75,6 @@ def _build_pioneer_frame(rc_code: int) -> list[int]:
 
 
 def _reverse_pioneer_command_byte(command: int) -> int:
-    """Reverse the low and high nibbles as ESPHome does for Pioneer codes."""
     reversed_command = 0
 
     for bit in range(4):
@@ -140,7 +89,6 @@ def _reverse_pioneer_command_byte(command: int) -> int:
 
 
 def _append_pioneer_word(timings: list[int], word: int) -> None:
-    """Append a 16-bit Pioneer word, most significant bit first."""
     for mask in (1 << bit for bit in range(15, -1, -1)):
         timings.extend(
             [

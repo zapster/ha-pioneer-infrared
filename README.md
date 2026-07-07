@@ -1,41 +1,23 @@
-# IR Remote Devices for Home Assistant
+# Pioneer Infrared for Home Assistant
 
-Custom Home Assistant integration for IR-controlled devices using the first-class
-`infrared` entity platform introduced in Home Assistant 2026.4.
+Custom Home Assistant integration for Pioneer receiver IR control using the
+first-class `infrared` entity platform introduced in Home Assistant 2026.4.
 
-The integration currently supports:
-
-- Samsung TV power commands from `samsung-tv-remote.yaml`
-- Pioneer receiver power, mute, volume, source, and tuner station commands from
-  `esphome-pioneer-remote.yaml`
+The integration supports Pioneer receiver power, mute, volume, source, and
+tuner station commands from `esphome-pioneer-remote.yaml`.
 
 It creates a Home Assistant config flow where you select:
-
-1. The device profile to control.
-2. The existing `infrared` emitter entity that is physically pointed at that
-   device.
+1. The `infrared` emitter entity that is physically pointed at the Pioneer
+   receiver.
 
 ## Installation
 
 Use HACS as a custom integration repository, or copy
-`custom_components/ir_remote_devices` into your Home Assistant
-`custom_components` directory.
+`custom_components/pioneer_infrared` into your Home Assistant `custom_components`
+directory.
 
-Restart Home Assistant, then add **IR Remote Devices** from **Settings >
+Restart Home Assistant, then add **Pioneer Infrared** from **Settings >
 Devices & services > Add integration**.
-
-## Notes for Upstreaming
-
-Home Assistant's preferred architecture is for common protocol encoders and
-known device code sets to live in `infrared-protocols`. This custom integration
-keeps Samsung and Pioneer protocol encoders local so it is immediately usable,
-but the intended upstream path is:
-
-- Contribute `SamsungCommand` and `PioneerCommand` to `infrared-protocols`.
-- Contribute the Samsung TV and Pioneer receiver code sets to
-  `infrared-protocols.codes`.
-- Split this repository's device profiles into upstream-style Home Assistant
-  integrations, likely `samsung_infrared` and `pioneer_infrared`.
 
 ## Development
 
@@ -47,4 +29,3 @@ python -m compileall custom_components tests
 
 The test suite expects Home Assistant 2026.4 or newer and the
 `infrared-protocols` package.
-

@@ -2,24 +2,15 @@
   "config": {
     "step": {
       "user": {
-        "title": "Set up IR remote device",
+        "title": "Set up Pioneer infrared receiver",
         "data": {
-          "device_type": "Device",
-          "infrared_entity_id": "Infrared emitter"
+          "infrared_emitter_entity_id": "Infrared emitter"
         }
       }
     },
     "abort": {
       "already_configured": "This device profile is already configured with this infrared emitter.",
       "no_emitters": "No infrared emitter entities are available."
-    }
-  },
-  "selector": {
-    "device_type": {
-      "options": {
-        "samsung_tv": "Samsung TV",
-        "pioneer_receiver": "Pioneer receiver"
-      }
     }
   },
   "entity": {
@@ -105,4 +96,3 @@
     }
   }
 }
-

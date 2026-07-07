@@ -1,7 +1,7 @@
 [project]
-name = "ha-ir-remote-devices"
+name = "ha-pioneer-infrared"
 version = "0.1.0"
-description = "Custom Home Assistant integration for IR-controlled Samsung and Pioneer devices"
+description = "Custom Home Assistant integration for IR-controlled Pioneer devices"
 requires-python = ">=3.13"
 dependencies = [
   "homeassistant>=2026.4.0",

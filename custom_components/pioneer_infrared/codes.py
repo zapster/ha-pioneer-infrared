@@ -1,4 +1,4 @@
-"""Device command codes for IR Remote Devices."""
+"""Pioneer receiver command codes."""
 
 from __future__ import annotations
 
@@ -7,22 +7,7 @@ from enum import StrEnum
 
 from infrared_protocols import Command
 
-from .protocols import PioneerCommand, SamsungCommand
-
-
-class SamsungTVCode(StrEnum):
-    """Samsung TV command codes from samsung-tv-remote.yaml."""
-
-    POWER_ON = "power_on"
-    POWER_OFF = "power_off"
-    POWER_TOGGLE = "power_toggle"
-
-
-SAMSUNG_TV_CODES: dict[SamsungTVCode, int] = {
-    SamsungTVCode.POWER_ON: 0xE0E09966,
-    SamsungTVCode.POWER_OFF: 0xE0E019E6,
-    SamsungTVCode.POWER_TOGGLE: 0xE0E040BF,
-}
+from .protocols import PioneerCommand
 
 
 @dataclass(frozen=True, slots=True)
@@ -105,13 +90,7 @@ PIONEER_SOURCE_COMMANDS: dict[str, PioneerReceiverCode] = {
 }
 
 
-def make_samsung_tv_command(code: SamsungTVCode) -> Command:
-    """Make a Samsung TV command."""
-    return SamsungCommand(data=SAMSUNG_TV_CODES[code])
-
-
 def make_pioneer_receiver_command(code: PioneerReceiverCode) -> Command:
     """Make a Pioneer receiver command."""
     spec = PIONEER_RECEIVER_CODES[code]
     return PioneerCommand(rc_code_1=spec.rc_code_1, rc_code_2=spec.rc_code_2)
-
