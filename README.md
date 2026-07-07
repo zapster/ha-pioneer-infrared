@@ -19,6 +19,8 @@ directory.
 Restart Home Assistant, then add **Pioneer Infrared** from **Settings >
 Devices & services > Add integration**.
 
+Looking for Samsung TV support? See [ha-samsung-infrared](https://github.com/zapster/ha-samsung-infrared).
+
 ## Development
 
 Local checks that do not require a Home Assistant checkout:
