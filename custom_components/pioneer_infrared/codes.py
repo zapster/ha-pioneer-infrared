@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import StrEnum
 
-from infrared_protocols import Command
+from infrared_protocols.commands import Command
 
 from .protocols import PioneerCommand
 

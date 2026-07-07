@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import override
 
-from infrared_protocols import Command
+from infrared_protocols.commands import Command
 
 PIONEER_MODULATION = 40000
 PIONEER_HEADER_HIGH_US = 9000
